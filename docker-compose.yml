@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  laravel:
+    build: ./laravel-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./laravel:/var/www/html
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=laravel-backend
+      - DB_USERNAME=root
+      - DB_PASSWORD=
+    depends_on:
+      - mysql
+
+  nextjs:
+    build: ./nextjs
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./nextjs:/app
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: laravel-backend
+      MYSQL_ROOT_PASSWORD: 
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
